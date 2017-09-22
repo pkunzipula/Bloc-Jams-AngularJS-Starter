@@ -29,10 +29,32 @@
             currentSong = song;
         };
         
+        /**
+        * @function playSong
+        * @desc Plays currently playing song or loads new audio file as currentBuzzObject
+        * @param {Object} song
+        */
+        
+        var playSong = function(song) {
+            currentBuzzObject.play();
+            song.playing = true;
+        }
+        
+        /**
+        * @function pauseSong
+        * @desc Pauses currently playing song
+        * @param {Object} song
+        */
+        
+        var pauseSong = function(song) {
+            currentBuzzObject.pause();
+            song.playing = false;
+        }
+        
         SongPlayer.play = function(song) {
+            if (currentSong !== song) {
                 setSong(song);
-                currentBuzzObject.play();
-                song.playing = true;
+                playSong(song);
                 
             } else if (currentSong === song) {
                 if (currentBuzzObject.isPaused()) {
@@ -42,8 +64,7 @@
         };
         
         SongPlayer.pause = function(song) {
-            currentBuzzObject.pause();
-            song.playing = false;
+            pauseSong(song);
         };
         
         return SongPlayer;
