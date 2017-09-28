@@ -1,5 +1,5 @@
 (function() {
-    function SongPlayer(Fixtures) {
+    function SongPlayer($rootScope, Fixtures) {
         var SongPlayer = {};
         
         var currentAlbum = Fixtures.getAlbum();
@@ -24,6 +24,12 @@
             currentBuzzObject = new buzz.sound(song.audioUrl, {
                 formats: ['mp3'],
                 preload: true   
+            });
+            
+            currentBuzzObject.bind('timeupdate', function() {
+                $rootScope.$apply(function() {
+                    SongPlayer.currentTime = currentBuzzObject.getTime();
+                });
             });
             
             SongPlayer.currentSong = song;
@@ -61,6 +67,20 @@
         };
         
         SongPlayer.currentSong = null;
+        
+        /**
+        * @desc Current playback time (in seconds) of currently playing song
+        * @type {Number}
+        */
+        SongPlayer.currentTime = null;
+        
+        /**
+        * @desc Current playback volume (out of 100) of currently playing song
+        * @type {Number}
+        */
+        SongPlayer.volume = null;
+        
+        
         
         SongPlayer.play = function(song) {
             song = song || SongPlayer.currentSong;
@@ -106,6 +126,24 @@
             }
         };
         
+        /**
+        * @function setCurrentTime
+        * @desc Set current time (in seconds) of currently playing song
+        * @param {Number} time
+        */
+        
+        SongPlayer.setCurrentTime = function(time) {
+            if (currentBuzzObject) {
+                currentBuzzObject.setTime(time);
+            }
+        };
+        
+        SongPlayer.setVolume = function(volume) {
+            if (currentBuzzObject) {
+                currentBuzzObject.setVolume(volume)
+            }
+        };
+        
         SongPlayer.songIndex = function(song) {
             song = song || SongPlayer.currentSong;
             getSongIndex(song);
@@ -116,5 +154,5 @@
     
     angular
         .module('blocJams')
-        .factory('SongPlayer', ['Fixtures', SongPlayer]);
+        .factory('SongPlayer', ['$rootScope','Fixtures', SongPlayer]);
 })();
