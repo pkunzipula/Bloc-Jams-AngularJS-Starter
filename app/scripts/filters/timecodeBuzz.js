@@ -1,14 +1,7 @@
 (function() {
     function timecodeBuzz() {
         return function(seconds) {
-            var seconds = Number.parseFloat(seconds);
-            
-            if (Number.isNaN(seconds)) {
-                return '-:--';
-            }
-            
             var output = buzz.toTimer(seconds);
-            
             return output;
         };
     }
